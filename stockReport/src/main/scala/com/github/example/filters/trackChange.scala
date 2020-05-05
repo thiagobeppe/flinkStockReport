@@ -57,7 +57,7 @@ class trackChange extends ProcessWindowFunction[(String,String,String,Double,Int
       maxTradeChange = (windowMaxTrade - prevWindowMaxTrade.value())/ prevWindowMaxTrade.value() * 100
     }
     if(prevWindowsMaxVol.value() != 0){
-      maxVolChange = (windowMaxTrade - prevWindowsMaxVol.value())/ prevWindowsMaxVol.value() * 100
+      maxVolChange = (maxVolChange - prevWindowsMaxVol.value())/ prevWindowsMaxVol.value() * 100
     }
 
 

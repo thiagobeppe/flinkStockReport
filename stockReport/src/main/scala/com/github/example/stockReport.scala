@@ -2,7 +2,7 @@ package com.github.example
 
 import java.util.Properties
 
-import com.github.example.filters.trackChange
+import com.github.example.filters.{trackChange, trackLargeDelta}
 import com.github.example.utils.timeStampExtract
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
@@ -21,7 +21,13 @@ object stockReport extends App {
     val changeData = data
                         .keyBy(value => value._3)
                         .window(TumblingEventTimeWindows.of(Time.minutes(1)))
-                        .process(new trackChange()).print()
+                        .process(new trackChange())
+    changeData.writeAsText("../results/firstReport.txt")
 
+    val secondReport = data
+                        .keyBy(value => value._3)
+                        .window(TumblingEventTimeWindows.of(Time.minutes(5)))
+                        .process(new trackLargeDelta(5))
+    secondReport.writeAsText("../results/secondReport.txt")
     env.execute()
 }
